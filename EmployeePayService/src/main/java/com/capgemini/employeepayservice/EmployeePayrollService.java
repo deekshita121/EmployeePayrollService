@@ -10,6 +10,9 @@ import org.apache.logging.log4j.Logger;
 
 public class EmployeePayrollService 
 {
+		public enum IOService {
+			CONSOLE_IO, FILE_IO, DB_IO, REST_IO
+		}
 	private static final Logger log = LogManager.getLogger(EmployeePayrollService.class);
 
 	private List<EmployeePayrollData> employeePayrollList;
@@ -23,7 +26,7 @@ public class EmployeePayrollService
 		EmployeePayrollService employeePayrollService = new EmployeePayrollService(employeePayrollList);
 		Scanner consoleInputReader = new Scanner(System.in);
 		employeePayrollService.readEmployeePayrollData(consoleInputReader);
-		employeePayrollService.writeEmployeePayrollData();
+		employeePayrollService.writeEmployeePayrollData(IOService.CONSOLE_IO);
 	}
 
 	private void readEmployeePayrollData(Scanner consoleInputReader) {
@@ -36,7 +39,16 @@ public class EmployeePayrollService
 		employeePayrollList.add(new EmployeePayrollData(id, name, salary));
 	}
 	
-	private void writeEmployeePayrollData() {
-		log.info("\nWriting Employee Payroll Roaster to Console\n" + employeePayrollList);
+	public void writeEmployeePayrollData(IOService ioService) {
+		if(ioService.equals(IOService.CONSOLE_IO))
+			log.info("\nWriting Employee Payroll Roaster to Console\n" + employeePayrollList);
+		else if(ioService.equals(IOService.FILE_IO))
+			new EmployeePayrollFileIOService().writeData(employeePayrollList);
+	}
+	public long countEntries(IOService ioService) {
+		long entries = 0;
+		if(ioService.equals(IOService.FILE_IO))
+			entries = new EmployeePayrollFileIOService().countEntries(employeePayrollList);
+		return entries;
 	}
 }
