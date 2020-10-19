@@ -56,4 +56,12 @@ public class EmployeePayrollService
 		if(ioService.equals(IOService.FILE_IO))
 			new EmployeePayrollFileIOService().printEntries();
 	}
+	
+	public List<EmployeePayrollData> readPayroll(IOService ioService) {
+		List<EmployeePayrollData> employeePayrollList = new ArrayList<>();
+		if(ioService.equals(IOService.FILE_IO))
+			employeePayrollList = new EmployeePayrollFileIOService().readEntries();
+		return employeePayrollList;
+	}
+	
 }
